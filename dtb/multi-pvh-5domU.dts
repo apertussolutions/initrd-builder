@@ -1,0 +1,189 @@
+/dts-v1/;
+
+/ {
+	chosen {
+		hypervisor {
+			compatible = "hypervisor,xen", "xen,x86";
+
+			dom0 {
+				compatible = "xen,domain";
+
+				domid = <0>;
+
+				capabilities = <7>;
+				mode = <12>;
+
+				domain-uuid = [B3 FB 98 FB 8F 9F 67 A3 8A 6E 62 5A 09 13 F0 8C];
+
+				memory = <0 536870912>;
+
+				cpus {
+					cpu0 {
+						compatible = "cpu,mask";
+						mask = < 0x000000FF >;
+					};
+				};
+
+				kernel {
+					compatible = "module,kernel", "module,index";
+					module-index = <1>;
+				};
+
+				initrd {
+					compatible = "module,ramdisk", "module,index";
+					module-index = <2>;
+				};
+			};
+
+			dom1 {
+				compatible = "xen,domain";
+
+				domid = <1>;
+
+				capabilities = <0>;
+				mode = <12>;
+
+				domain-uuid = [B3 FB 98 FB 8F 9F 67 A3 8A 6E 62 5A 09 13 F0 8C];
+
+				memory = <0 1073741824>;
+
+				cpus {
+					cpu0 {
+						compatible = "cpu,mask";
+						mask = < 0x0000000F >;
+					};
+				};
+
+				kernel {
+					compatible = "module,kernel", "module,index";
+					module-index = <3>;
+				};
+
+				initrd {
+					compatible = "module,ramdisk", "module,index";
+					module-index = <4>;
+				};
+			};
+
+			dom2 {
+				compatible = "xen,domain";
+
+				domid = <2>;
+
+				capabilities = <0>;
+				mode = <12>;
+
+				domain-uuid = [B3 FB 98 FB 8F 9F 67 A3 8A 6E 62 5A 09 13 F0 8C];
+
+				memory = <0 1073741824>;
+
+				cpus {
+					cpu0 {
+						compatible = "cpu,mask";
+						mask = < 0x0000000F >;
+					};
+				};
+
+				kernel {
+					compatible = "module,kernel", "module,index";
+					module-index = <5>;
+				};
+
+				initrd {
+					compatible = "module,ramdisk", "module,index";
+					module-index = <6>;
+				};
+			};
+
+			dom3 {
+				compatible = "xen,domain";
+
+				domid = <3>;
+
+				capabilities = <0>;
+				mode = <12>;
+
+				domain-uuid = [B3 FB 98 FB 8F 9F 67 A3 8A 6E 62 5A 09 13 F0 8C];
+
+				memory = <0 1073741824>;
+
+				cpus {
+					cpu0 {
+						compatible = "cpu,mask";
+						mask = < 0x0000000F >;
+					};
+				};
+
+				kernel {
+					compatible = "module,kernel", "module,index";
+					module-index = <7>;
+				};
+
+				initrd {
+					compatible = "module,ramdisk", "module,index";
+					module-index = <8>;
+				};
+			};
+
+			dom4 {
+				compatible = "xen,domain";
+
+				domid = <4>;
+
+				capabilities = <0>;
+				mode = <12>;
+
+				domain-uuid = [B3 FB 98 FB 8F 9F 67 A3 8A 6E 62 5A 09 13 F0 8C];
+
+				memory = <0 1073741824>;
+
+				cpus {
+					cpu0 {
+						compatible = "cpu,mask";
+						mask = < 0x0000000F >;
+					};
+				};
+
+				kernel {
+					compatible = "module,kernel", "module,index";
+					module-index = <9>;
+				};
+
+				initrd {
+					compatible = "module,ramdisk", "module,index";
+					module-index = <10>;
+				};
+			};
+
+			dom5 {
+				compatible = "xen,domain";
+
+				domid = <5>;
+
+				capabilities = <0>;
+				mode = <12>;
+
+				domain-uuid = [B3 FB 98 FB 8F 9F 67 A3 8A 6E 62 5A 09 13 F0 8C];
+
+				memory = <0 1073741824>;
+
+				cpus {
+					cpu0 {
+						compatible = "cpu,mask";
+						mask = < 0x0000000F >;
+					};
+				};
+
+				kernel {
+					compatible = "module,kernel", "module,index";
+					module-index = <11>;
+				};
+
+				initrd {
+					compatible = "module,ramdisk", "module,index";
+					module-index = <12>;
+				};
+			};
+		};
+	};
+};

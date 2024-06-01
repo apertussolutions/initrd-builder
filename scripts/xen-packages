@@ -1,0 +1,41 @@
+#!/bin/bash
+
+set -e
+
+BASEDIR="$( cd "$( dirname "$( realpath "${BASH_SOURCE[0]}" )" )/.." >/dev/null 2>&1 && pwd )"
+
+expand_path() {
+    cd ${1}
+    pwd
+    cd ${BASEDIR}
+}
+
+get_sys_deps() {
+    ldd ${1} 2>/dev/null|grep 'ld-linux-x86-64'|awk '{print $1}'
+    for f in $(find ${1} -type f); do
+        ldd $f 2>/dev/null
+    done |grep 'x86_64-linux-gnu'|awk '{print $3}'|sort|uniq
+}
+
+cd ${BASEDIR}
+xendir=$(expand_path ${1})
+pkgdir=$(expand_path ${2})
+
+cd ${xendir}
+
+pkgdir="${pkgdir}/$(git describe)"
+mkdir -p ${pkgdir}
+
+for t in console helpers hotplug libs misc xcutils xenmon xenpmd xenstored xentop xl xs-clients; do
+    echo "packaging ${t}...."
+    mkdir pkg
+    DESTDIR=${PWD}/pkg make -C tools/${t} install >/dev/null
+
+    for dep in $(get_sys_deps ${PWD}/pkg); do
+        install -D ${dep} ${PWD}/pkg/${dep}
+    done
+
+    tar -C pkg -czf ${pkgdir}/${t}.tar.gz .
+    rm -rf pkg
+done
+echo "done"

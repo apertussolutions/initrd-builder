@@ -1,0 +1,51 @@
+#!/bin/bash
+
+set -e
+
+BASEDIR="$( cd "$( dirname "$( realpath "${BASH_SOURCE[0]}" )" )/.." >/dev/null 2>&1 && pwd )"
+
+CORE_PACKAGES="busybox-root kernelmods"
+DOM0_PACKAGES="console helpers hotplug libs xenpmd xenstored xentop xl xs-clients"
+DOMU_PACKAGES="libs xs-clients"
+
+image_type="${1}"
+revision="${2}"
+
+if [ ! -d ${BASEDIR}/packages/${revision} ]; then
+    echo "Packages revision, ${revision}, does not exist"
+    exit 1
+fi
+
+echo "Require sudo privileges:"
+sudo -l > /dev/null
+
+cd ${BASEDIR}
+sudo rm -rf .build
+mkdir .build
+
+for p in ${CORE_PACKAGES}; do
+    sudo tar -C .build -xf packages/${p}.tar.gz
+done
+
+case ${image_type} in
+dom0)
+    for p in ${DOM0_PACKAGES}; do
+        sudo tar -C .build -xf packages/${revision}/${p}.tar.gz
+    done
+    sudo cp packages/dom0-init .build/init
+    ;;
+domU)
+    for p in ${DOMU_PACKAGES}; do
+        sudo tar -C .build -xf packages/${revision}/${p}.tar.gz
+    sudo cp packages/domu-init .build/init
+    done
+    ;;
+*)
+    echo "Unknown initrd image type, ${image_type}"
+    exit 1
+esac
+
+(cd .build &&
+sudo find . -print0 | cpio --null --create --verbose --format=newc 2>/dev/null | gzip --best > ${BASEDIR}/images/${image_type}-${revision}-initramfs.gz)
+
+sudo rm -rf .build

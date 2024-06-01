@@ -1,0 +1,24 @@
+#!/bin/sh
+
+for d in proc sys dev; do
+	if ! test -d /${d}; then
+		mkdir /${d}
+	fi
+done
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devtmpfs devtmpfs /dev
+
+mkdir /dev/pts
+mount -t devpts devpts /dev/pts
+
+if test -d /proc/xen ; then
+	mount -t xenfs xenfs /proc/xen
+fi
+
+echo 0 > /proc/sys/kernel/printk
+
+modprobe xen-gntdev
+modprobe xen-gntalloc
+
+exec /bin/ash
