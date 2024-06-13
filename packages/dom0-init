@@ -1,11 +1,5 @@
 #!/bin/sh
 
-for d in proc sys dev; do
-	if ! test -d /${d}; then
-		mkdir /proc
-	fi
-done
-
 mount -t proc proc /proc
 mount -t sysfs sysfs /sys
 mount -t devtmpfs devtmpfs /dev
@@ -17,15 +11,28 @@ if test -d /proc/xen ; then
 	mount -t xenfs xenfs /proc/xen
 fi
 
-echo 0 > /proc/sys/kernel/printk
+#echo 0 > /proc/sys/kernel/printk
 
 modprobe xen-gntdev
 modprobe xen-gntalloc
+modprobe xen-blkback
+modprobe xen-netback
+modprobe xen-pciback.ko
+modprobe xen-scsiback.ko
 
-/usr/sbin/xenstored --pid-file /var/run/xen/xenstored.pid
+/sbin/mdev -s
+
+#echo /sbin/mdev >/proc/sys/kernel/hotplug
+
+mkdir -p /var/log
+/usr/sbin/xenstored --pid-file /var/run/xenstored.pid -T /var/log/xenstored.log
 
 /usr/lib/xen/bin/xen-init-dom0
 
-/usr/sbin/xenconsoled
+/usr/sbin/xenconsoled --pid-file /var/run/xenconsoled.pid
 
-exec /bin/ash
+/usr/lib/xen/bin/late-init-domains -c0 -x0
+
+export PS1="[dom$(xenstore read domid 2>/dev/null)] # "
+
+exec /usr/bin/setsid cttyhack /bin/ash
