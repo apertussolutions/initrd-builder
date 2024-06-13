@@ -22,12 +22,15 @@ cd ${BASEDIR}
 sudo rm -rf .build
 mkdir .build
 
-sudo mkdir -p .build/{bin,dev,etc,proc,sbin,sys,tmp,usr/{bin,sbin},var/run}
+sudo mkdir -p .build/{bin,dev,etc,proc,sbin,sys,tmp}
+sudo mkdir -p .build/usr/{bin,sbin}
+sudo mkdir -p .build/var/{lib/xen,lock,run}
 
-sudo mknod -m 0600 .build/dev/console c 5 1
 sudo mknod -m 0666 .build/dev/null c 1 3
-sudo mknod -m 0666 .build/dev/tty c 5 0
 sudo mknod -m 0666 .build/dev/zero c 1 5
+sudo mknod -m 0666 .build/dev/tty c 5 0
+sudo mknod -m 0600 .build/dev/console c 5 1
+sudo mknod -m 0666 .build/dev/ptmx c 5 2
 
 sudo cp /bin/busybox .build/bin/.
 for dep in $(get_sys_deps /bin/busybox); do

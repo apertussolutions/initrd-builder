@@ -5,7 +5,7 @@ set -e
 BASEDIR="$( cd "$( dirname "$( realpath "${BASH_SOURCE[0]}" )" )/.." >/dev/null 2>&1 && pwd )"
 
 CORE_PACKAGES="busybox-root kernelmods"
-DOM0_PACKAGES="console helpers hotplug libs xenpmd xenstored xentop xl xs-clients"
+DOM0_PACKAGES="console helpers hotplug libs xenpmd xenstored xentop xl xs-clients misc"
 DOMU_PACKAGES="libs xs-clients"
 
 image_type="${1}"
@@ -33,6 +33,7 @@ dom0)
         sudo tar -C .build -xf packages/${revision}/${p}.tar.gz
     done
     sudo cp packages/dom0-init .build/init
+    sudo touch .build/etc/xen/xl.conf
     ;;
 domU)
     for p in ${DOMU_PACKAGES}; do
@@ -44,6 +45,8 @@ domU)
     echo "Unknown initrd image type, ${image_type}"
     exit 1
 esac
+
+sudo chown -R root:root .build/*
 
 (cd .build &&
 sudo find . -print0 | cpio --null --create --verbose --format=newc 2>/dev/null | gzip --best > ${BASEDIR}/images/${image_type}-${revision}-initramfs.gz)

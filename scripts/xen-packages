@@ -28,6 +28,9 @@ mkdir -p ${pkgdir}
 
 for t in console helpers hotplug libs misc xcutils xenmon xenpmd xenstored xentop xl xs-clients; do
     echo "packaging ${t}...."
+    if [ -d pkg ]; then
+        rm -rf pkg
+    fi
     mkdir pkg
     DESTDIR=${PWD}/pkg make -C tools/${t} install >/dev/null
 
