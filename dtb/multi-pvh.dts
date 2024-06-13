@@ -16,13 +16,7 @@
 				domain-uuid = [B3 FB 98 FB 8F 9F 67 A3 8A 6E 62 5A 09 13 F0 8C];
 
 				memory = <0 1073741824>;
-
-				cpus {
-					cpu0 {
-						compatible = "cpu,mask";
-						mask = < 0x000000FF >;
-					};
-				};
+				max_vcpus = <512>;
 
 				kernel {
 					compatible = "module,kernel", "module,index";
@@ -46,13 +40,8 @@
 				domain-uuid = [B3 FB 98 FB 8F 9F 67 A3 8A 6E 62 5A 09 13 F0 8C];
 
 				memory = <0 1073741824>;
-
-				cpus {
-					cpu0 {
-						compatible = "cpu,mask";
-						mask = < 0x00000002 >;
-					};
-				};
+				max_vcpus = <512>;
+				cpu_nodes = < 0x000000F0 >;
 
 				kernel {
 					compatible = "module,kernel", "module,index";
